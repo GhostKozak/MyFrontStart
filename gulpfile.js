@@ -16,7 +16,7 @@ gulp.task('browser-sync', () => {
     });
 });
 
-gulp.task('css', () => {
+gulp.task('sass', () => {
     return gulp.src('src/sass/**/*.scss')
         .pipe(sass({
             outputStyle: 'compressed'
@@ -27,9 +27,14 @@ gulp.task('css', () => {
         .pipe(browserSync.stream());;
 });
 
+gulp.task('css', () => {
+    return gulp.src('src/css/**/*.css')
+        .pipe(minifyCSS())
+        .pipe(gulp.dest('dist/css'))
+});
+
 gulp.task('js', () => {
     return gulp.src('src/js/**/*.js')
-        .pipe(minifyJS())
         .pipe(gulp.dest('dist/js'))
         .pipe(browserSync.stream());
 });
@@ -42,24 +47,35 @@ gulp.task('html', () => {
 
 gulp.task('img', () => {
     return gulp.src('src/img/**/*')
-        .pipe(minifyImg())
+        .pipe(minifyImg({
+            verbose: true
+        }))
         .pipe(gulp.dest('dist/img'));
+});
+
+gulp.task('font', () => {
+    return gulp.src('src/webfonts/*')
+        .pipe(gulp.dest('dist/webfonts'));
 });
 
 gulp.task('watch', () => {
     gulp.watch('src/**/*.html', ['html'] );
-    gulp.watch('src/sass/**/*.scss', ['css'] );
+    gulp.watch('src/sass/**/*.scss', ['sass'] );
+    gulp.watch('src/css/**/*.css', ['css'] );
     gulp.watch('src/js/**/*.js', ['js'] );
     gulp.watch('src/img/**/*', ['img'] );
+    gulp.watch('src/webfonts/**/*', ['font'] );
 });
 
-gulp.task('delete', () => del(['dist/css', 'dist/js', 'dist/img', 'dist/*.html']));
+gulp.task('delete', () => del(['dist/css', 'dist/js', 'dist/img', 'dist/*.html', 'dist/webfonts']));
 
 gulp.task('default', () => {
     runSequence([
         'delete',
         'html',
+        'font',
         'css',
+        'sass',
         'js',
         'img',
         'browser-sync',

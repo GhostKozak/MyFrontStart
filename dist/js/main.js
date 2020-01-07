@@ -1,1 +1,1 @@
-alert("test");
+function test(){alert("I am working")}

@@ -1,1 +1,10 @@
-body{background-color:red}.test{color:purple}
+body {
+  background-color: purple;
+}
+
+.test {
+  color: white;
+  font-family: Tahoma,serif;
+  -webkit-transition: all 4s ease;
+  transition: all 4s ease;
+}
